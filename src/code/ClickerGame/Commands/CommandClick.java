@@ -14,7 +14,7 @@ public final class CommandClick implements Command
     private final GameLogic logic;
 
     /**
-     * Constructs a click command (manual clicks).
+     * Constructs a click command.
      *
      * @param logic the game logic
      */
@@ -29,5 +29,13 @@ public final class CommandClick implements Command
     public void execute()
     {
         logic.click();
+    }
+
+    /**
+     * Undoes a click action.
+     */
+    public void undo()
+    {
+        logic.undoClick();
     }
 }

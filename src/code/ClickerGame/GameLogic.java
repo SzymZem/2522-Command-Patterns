@@ -145,4 +145,35 @@ public final class GameLogic
         return AUTO_CLICKER_COST;
     }
 
+
+    /**
+     * Undoes a click action.
+     */
+    public void undoClick()
+    {
+        curScore -= curClickPower;
+    }
+
+    /**
+     * Undoes click power upgrade.
+     */
+    public void undoUpgradeClickPower()
+    {
+        curClickPower -= POWER_INCREMENT;
+        curScore += POWER_INCREMENT_COST;
+    }
+
+    /**
+     * Undoes auto-clicker purchase.
+     */
+    public void undoAddAutoClicker()
+    {
+        if(curAutoClickers > 0)
+        {
+            curAutoClickers--;
+            curScore += AUTO_CLICKER_COST;
+        }
+    }
+
+
 }

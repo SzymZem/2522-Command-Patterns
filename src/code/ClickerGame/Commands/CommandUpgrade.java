@@ -5,7 +5,6 @@ import ClickerGame.GameLogic;
 
 /**
  * Command to upgrade click power.
- * Applies to both manual click (CommandClick) and auto-clicker (CommandAutoClicker).
  *
  * @author Szymon Zemojtel
  * @version 1
@@ -25,10 +24,18 @@ public class CommandUpgrade implements Command
     }
 
     /**
-     * Executes the upgrade logic.
+     * Executes upgrade logic.
      */
     public void execute()
     {
         logic.upgradeClickPower();
+    }
+
+    /**
+     * Undoes upgrade logic.
+     */
+    public void undo()
+    {
+        logic.undoUpgradeClickPower();
     }
 }

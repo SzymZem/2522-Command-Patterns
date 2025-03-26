@@ -30,4 +30,12 @@ public class CommandAutoClicker implements Command
     {
         logic.addAutoClicker();
     }
+
+    /**
+     * Undoes auto-clicker purchase.
+     */
+    public void undo()
+    {
+        logic.undoAddAutoClicker();
+    }
 }

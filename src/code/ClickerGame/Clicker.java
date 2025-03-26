@@ -34,6 +34,8 @@ public final class Clicker extends Application
     private static final String TEXT_BUTTON_UPGRADE      = "Upgrade (+%d Power, Costs %d)";
     private static final String TEXT_BUTTON_AUTO_CLICKER = "Buy Auto Clicker (Costs %d)";
 
+    private boolean undoMode;
+
 
     /**
      * Launches the GUI window and sets up game elements.
@@ -60,6 +62,7 @@ public final class Clicker extends Application
         final Button buttonClick;
         final Button buttonUpgrade;
         final Button buttonAutoClicker;
+        final Button buttonUndoToggle;
 
         final KeyFrame frame;
         final Duration interval;
@@ -86,16 +89,21 @@ public final class Clicker extends Application
 
 
         upgradePowerIncrement = GameLogic.getPowerIncrement();
-        upgradeCost = GameLogic.getPowerIncrementCost();
-        autoClickerCost = GameLogic.getAutoClickerCost();
+        upgradeCost           = GameLogic.getPowerIncrementCost();
+        autoClickerCost       = GameLogic.getAutoClickerCost();
 
-        buttonTextClick = TEXT_BUTTON_CLICK;
-        buttonTextUpgrade = String.format(TEXT_BUTTON_UPGRADE, upgradePowerIncrement, upgradeCost);
-        buttonTextAutoClicker = String.format(TEXT_BUTTON_AUTO_CLICKER, autoClickerCost);
+        buttonTextClick       = TEXT_BUTTON_CLICK;
+        buttonTextUpgrade     = String.format(TEXT_BUTTON_UPGRADE,
+                                              upgradePowerIncrement,
+                                              upgradeCost);
+        buttonTextAutoClicker = String.format(TEXT_BUTTON_AUTO_CLICKER,
+                                              autoClickerCost);
 
         buttonClick       = new Button(buttonTextClick);
         buttonUpgrade     = new Button(buttonTextUpgrade);
         buttonAutoClicker = new Button(buttonTextAutoClicker);
+        buttonUndoToggle  = new Button("Undo Mode: OFF");
+
 
         // Click button actions
         buttonClick.setOnAction(e ->
@@ -104,7 +112,15 @@ public final class Clicker extends Application
                                     commandClick = new CommandClick(logic);
 
                                     invoker.setCommand(commandClick);
-                                    invoker.invoke();
+                                    if(undoMode)
+                                    {
+                                        invoker.undo();
+                                    }
+                                    else
+                                    {
+                                        invoker.invoke();
+                                    }
+
                                     updateStats(scoreLabel,
                                                 powerLabel,
                                                 autoClickerLabel,
@@ -118,7 +134,15 @@ public final class Clicker extends Application
                                       commandUpgrade = new CommandUpgrade(logic);
 
                                       invoker.setCommand(commandUpgrade);
-                                      invoker.invoke();
+                                      if(undoMode)
+                                      {
+                                          invoker.undo();
+                                      }
+                                      else
+                                      {
+                                          invoker.invoke();
+                                      }
+
                                       updateStats(scoreLabel,
                                                   powerLabel,
                                                   autoClickerLabel,
@@ -132,12 +156,26 @@ public final class Clicker extends Application
                                           commandAutoClicker = new CommandAutoClicker(logic);
 
                                           invoker.setCommand(commandAutoClicker);
-                                          invoker.invoke();
+                                          if(undoMode)
+                                          {
+                                              invoker.undo();
+                                          }
+                                          else
+                                          {
+                                              invoker.invoke();
+                                          }
+
                                           updateStats(scoreLabel,
                                                       powerLabel,
                                                       autoClickerLabel,
                                                       logic);
                                       });
+
+        buttonUndoToggle.setOnAction(e ->
+                                     {
+                                         undoMode = !undoMode;
+                                         buttonUndoToggle.setText("Undo Mode: " + (undoMode ? "ON" : "OFF"));
+                                     });
 
 
         interval = Duration.millis(AUTO_INTERVAL_MS);
@@ -162,7 +200,8 @@ public final class Clicker extends Application
                           autoClickerLabel,
                           buttonClick,
                           buttonUpgrade,
-                          buttonAutoClicker);
+                          buttonAutoClicker,
+                          buttonUndoToggle);
 
         scene = new Scene(layout,
                           WINDOW_WIDTH,
